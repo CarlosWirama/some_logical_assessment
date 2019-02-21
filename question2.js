@@ -17,18 +17,11 @@ function findYIntercept(x, y, tangent) {
 }
 
 function pushNodes(targetArray, node1Key, node2Key) {
-  var pushedNodesCount = 0;
   // prevent duplicate node to be pushed
-  if(targetArray.indexOf(node1Key) === -1) {
-    targetArray.push(node1Key);
-    pushedNodesCount++;
-  }
-  if(targetArray.indexOf(node2Key) === -1) {
-    targetArray.push(node2Key);
-    pushedNodesCount++;
-  }
-  return pushedNodesCount;
+  if(targetArray.indexOf(node1Key) === -1) targetArray.push(node1Key);
+  if(targetArray.indexOf(node2Key) === -1) targetArray.push(node2Key);
 }
+
 function saveOccurance(
   nodesWithSameTangent,
   duplicates,
@@ -57,17 +50,17 @@ function saveOccurance(
   } else if(!nodesWithSameTangent[tangentResult][yIntercept]) {
     nodesWithSameTangent[tangentResult][yIntercept] = [];
   }
-  
+  var listOfNodeInCurrentLine = nodesWithSameTangent[tangentResult][yIntercept];
+
   // save nodesWithSameTangent
   // push with nodeKeys, not the actual points, for easy-compare
-  pushNodes(
-    nodesWithSameTangent[tangentResult][yIntercept],
-    node1Key,
-    node2Key
-  );
+  pushNodes(listOfNodeInCurrentLine, node1Key, node2Key);
+
   // return current max value
-  return nodesWithSameTangent[tangentResult][yIntercept].length;
+  return listOfNodeInCurrentLine.length;
 }
+
+
 // Main function for Question #2
 function countMaxNodesInStraightLine(arrayOfNodes) {
   var nodesAmount = arrayOfNodes.length;
@@ -80,7 +73,7 @@ function countMaxNodesInStraightLine(arrayOfNodes) {
     }
   };
 
-  exapmle
+  exapmle (not a real value):
   nodesWithSameTangent = {
     1: {
       2: ['1,1', '2,2', '3,3'],
