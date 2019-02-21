@@ -133,4 +133,4 @@ console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 2]])); // e
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 4]])); // expect 3
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [2, 3], [2, 4]])); // expect 3
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [2, 2], [3, 3], [4, 4]])); // expect 5
-console.log(countMaxNodesInStraightLine([[2, 1], [2, 1], [2, 1], [2, 3], [2, 4]])); // expect 5
+console.log(countMaxNodesInStraightLine([[2, 1], [2, 1], [0, 1], [2, 3], [2, 4]])); // expect 4
