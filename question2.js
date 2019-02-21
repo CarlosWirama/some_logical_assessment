@@ -17,9 +17,17 @@ function findYIntercept(x, y, tangent) {
 }
 
 function pushNodes(targetArray, node1Key, node2Key) {
+  var pushedNodesCount = 0;
   // prevent duplicate node to be pushed
-  if(targetArray.indexOf(node1Key) === -1) targetArray.push(node1Key);
-  if(targetArray.indexOf(node2Key) === -1) targetArray.push(node2Key);
+  if(targetArray.indexOf(node1Key) === -1) {
+    targetArray.push(node1Key);
+    pushedNodesCount++;
+  }
+  if(targetArray.indexOf(node2Key) === -1) {
+    targetArray.push(node2Key);
+    pushedNodesCount++;
+  }
+  return pushedNodesCount;
 }
 function saveOccurance(
   nodesWithSameTangent,
@@ -37,22 +45,28 @@ function saveOccurance(
     duplicates[node1Key] = duplicates[node1Key]
       ? duplicates[node1Key] + 1
       : 1;
-    return; // no need to set anything else
+    return 0; // no need to set anything else
   }
   var yIntercept = (tangentResult === Infinity)
-    ? node1[0] // treat yIntercept as xIntercept instead
-    : findYIntercept(node1[0], node1[1], tangentResult);
-
+  ? node1[0] // treat yIntercept as xIntercept instead
+  : findYIntercept(node1[0], node1[1], tangentResult);
+  
   // initialize undefined values, make sure everything's ready
   if(!nodesWithSameTangent[tangentResult]) {
     nodesWithSameTangent[tangentResult] = { [yIntercept]: [] };
   } else if(!nodesWithSameTangent[tangentResult][yIntercept]) {
     nodesWithSameTangent[tangentResult][yIntercept] = [];
   }
-
+  
   // save nodesWithSameTangent
   // push with nodeKeys, not the actual points, for easy-compare
-  pushNodes(nodesWithSameTangent[tangentResult][yIntercept], node1Key, node2Key);
+  pushNodes(
+    nodesWithSameTangent[tangentResult][yIntercept],
+    node1Key,
+    node2Key
+  );
+  // return current max value
+  return nodesWithSameTangent[tangentResult][yIntercept].length;
 }
 // Main function for Question #2
 function countMaxNodesInStraightLine(arrayOfNodes) {
@@ -92,23 +106,35 @@ function countMaxNodesInStraightLine(arrayOfNodes) {
         duplicates['1,1']: 3  -> means there are 4 nodes of (1,1)
   */
 
+  var totalMax = 0;
   for(var x = 0; x < nodesAmount; x++) {
+    var currMax = 0;
     for( var y = x + 1; y < nodesAmount; y++) {
       var node1 = arrayOfNodes[x], node2 = arrayOfNodes[y];
       var tangentResult = findTangent(node1, node2);
       // save occurence
-      saveOccurance(nodesWithSameTangent, duplicates, node1, node2, tangentResult);
+      var newMax = saveOccurance(
+        nodesWithSameTangent,
+        duplicates,
+        node1,
+        node2,
+        tangentResult,
+      );
+      currMax = Math.max(currMax, newMax);
     }
+    var nodeKey = `${arrayOfNodes[x][0]},${arrayOfNodes[x][1]}`;
+    var currDuplicate = duplicates[nodeKey] || 0;
+    totalMax = Math.max(totalMax, currMax + currDuplicate);
   }
-  return Object.keys(nodesWithSameTangent)
-    .reduce(function(maxOccurance, tangent) {
-      var currentTangentValue = nodesWithSameTangent[tangent];
-      return (maxOccurance < currentTangentValue)
-        ? currentTangentValue
-        : maxOccurance;
-    }, 0);
+  return totalMax;
 }
 
 // TODO make this as unit test
-console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [3, 3]]));
-// expect 3
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [3, 3]])); // expect 3
+console.log(countMaxNodesInStraightLine([[1, 1], [1, 1]])); // expect 2
+console.log(countMaxNodesInStraightLine([[1, 1]])); // expect 1
+console.log(countMaxNodesInStraightLine([[1, 1], [1, 0]])); // expect 2
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [3, 3], [4, 4]])); // expect 4
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 2]])); // expect 2
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 4]])); // expect 3
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [2, 3], [2, 4]])); // expect 3
