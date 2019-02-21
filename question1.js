@@ -76,4 +76,11 @@ function transform(beginWord, endWord, wordList) {
 // log the output
 // TODO make it as a unit test
 console.log(transform('hit', 'cog', ['hot','dot','dog','lot','log','cog']));
+/*  expected Output: [
+      ["hit", "hot", "dot", "dog", "cog"],
+      ["hit", "hot", "lot", "log", "cog"],
+    ]
+*/
+
 console.log(transform('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log']));
+// expected Output: []
