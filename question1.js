@@ -5,15 +5,17 @@ function countCharDifference(a, b) {
   // please report if the requirement is different
   var count = 0;
   for(var i = 0; i < a.length; i++) {
-    if (a.charAt(i) === b.charAt(i)) count++;
+    if (a.charAt(i) !== b.charAt(i)) count++;
   }
+
   return count;
 }
 
 function findTransformableWords(testedWord, wordList) {
-  return wordList.filter(function (loopedWord) {
+  var a = wordList.filter(function (loopedWord) {
     return countCharDifference(testedWord, loopedWord) === 1;
   });
+  return a;
 }
 
 // recursively trace the path from destination (endWord)
@@ -23,12 +25,12 @@ function tracePath(result, builtPath, tracedWord, currentNode) {
   // track possibilities if theres more than 1
   for(var i = 1; i < prevNodes.length; i++) { // iterate from index = 1
     const newPath = [...builtPath];
-    newPath.shift(prevNodes[i]);
+    newPath.unshift(prevNodes[i]);
     result.push(newPath);
     tracePath(result, newPath, tracedWord, prevNodes[i]);
   }
   // push prevNodes[0] last, to avoid affecting the remaining path
-  builtPath.shift(prevNodes[0]);
+  builtPath.unshift(prevNodes[0]);
   tracePath(result, builtPath, tracedWord, prevNodes[0]);
 }
 
@@ -62,10 +64,16 @@ function transform(beginWord, endWord, wordList) {
       });
     });
   };
-  var result = [];
-  if(endWordReached) tracePath(result, [], tracedWord, endWord);
+  var result = []
+  if(endWordReached) {
+    var initialBuiltPath = [endWord]
+    result.push(initialBuiltPath);
+    tracePath(result, initialBuiltPath, tracedWord, endWord);
+  }
   return result;
 }
 
 // log the output
+// TODO make it as a unit test
 console.log(transform('hit', 'cog', ['hot','dot','dog','lot','log','cog']));
+console.log(transform('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log']));
