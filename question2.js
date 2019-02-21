@@ -33,7 +33,7 @@ function saveOccurance(
   // NaN result means it's a duplicate node
   var node1Key = `${node1[0]},${node1[1]}`;
   var node2Key = `${node2[0]},${node2[1]}`;
-  if(tangentResult === NaN) {
+  if(isNaN(tangentResult)) {
     // increment duplicates[node1]. set to 1 if undefined
     duplicates[node1Key] = duplicates[node1Key]
       ? duplicates[node1Key] + 1
@@ -65,6 +65,7 @@ function saveOccurance(
 function countMaxNodesInStraightLine(arrayOfNodes) {
   var nodesAmount = arrayOfNodes.length;
   if(nodesAmount < 3) return nodesAmount; // no need to count
+
   var nodesWithSameTangent = {};
   /* the structure will look like this
   nodesWithSameTangent = {
@@ -131,3 +132,5 @@ console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [3, 3], [4, 4]])); // e
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 2]])); // expect 2
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [1, 3], [4, 4]])); // expect 3
 console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [2, 3], [2, 4]])); // expect 3
+console.log(countMaxNodesInStraightLine([[1, 1], [2, 2], [2, 2], [3, 3], [4, 4]])); // expect 5
+console.log(countMaxNodesInStraightLine([[2, 1], [2, 1], [2, 1], [2, 3], [2, 4]])); // expect 5
